@@ -1,0 +1,12 @@
+[submodule "til24-autonomy"]
+	path = til24-autonomy
+	url = https://github.com/NYANPLAN3/til24-autonomy.git
+[submodule "til24-vlm"]
+	path = til24-vlm
+	url = https://github.com/NYANPLAN3/til24-vlm.git
+[submodule "til24-nlp"]
+	path = til24-nlp
+	url = https://github.com/NYANPLAN3/til24-nlp.git
+[submodule "til24-asr"]
+	path = til24-asr
+	url = https://github.com/NYANPLAN3/til24-asr.git
