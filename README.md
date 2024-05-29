@@ -11,6 +11,8 @@ Template for FastAPI-based API server. Features:
 Oh yeah, this template should work with the fancy "Dev Containers: Clone Repository
 in Container Volume..." feature.
 
+NOTE: Yes I checked, `load_dotenv` puts `.env` at lower priority than system environment variables.
+
 ## Useful Commands
 
 Ensure the virtual environment is active and `poetry install` has been run before using the below:

@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import json
 import os
 from urllib.parse import quote
@@ -14,18 +18,18 @@ LOCAL_IP = os.getenv("LOCAL_IP", "0.0.0.0")
 SERVER_IP = os.getenv("COMPETITION_SERVER_IP", "host.docker.internal")
 SERVER_PORT = os.getenv("COMPETITION_SERVER_PORT", "8000")
 
-manager: FinalsManager = ModelsManager(LOCAL_IP)
+# manager: FinalsManager = ModelsManager(LOCAL_IP)
 # manager: FinalsManager = AutoManager(LOCAL_IP)
-# manager: FinalsManager = MockManager()
+manager: FinalsManager = MockManager()
 
 
 async def server():
     index = 0
+    print(f"connecting to competition server {SERVER_IP} at port {SERVER_PORT}")
     async for websocket in websockets.connect(
         quote(f"ws://{SERVER_IP}:{SERVER_PORT}/ws/{TEAM_NAME}", safe="/:"),
         max_size=2**24,
     ):
-        print(f"connecting to competition server {SERVER_IP} at port {SERVER_PORT}")
         try:
             while True:
                 # should be receiving either audio bytes for asr, or "done!" message

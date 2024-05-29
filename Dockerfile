@@ -21,7 +21,7 @@ RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
 WORKDIR /app
 
 # Remember to regenerate requirements.txt!
-COPY --link requirements.txt ./
+COPY --link requirements.txt .env ./
 RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
   pip install -r requirements.txt
 
@@ -30,4 +30,4 @@ COPY --link src ./src
 
 EXPOSE 3000
 # python participant_server.py
-CMD ["python3", "participant_server.py"]
+CMD ["python3", "src/participant_server.py"]
