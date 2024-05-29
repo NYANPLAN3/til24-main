@@ -1,7 +1,8 @@
 import json
-import websockets
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
+
+import websockets
 
 
 class FinalsManager(ABC):

@@ -1,7 +1,8 @@
 from random import randint
 from typing import Dict, List
-from finals_manager import FinalsManager
+
 import requests
+from finals_manager import FinalsManager
 
 
 class AutoManager(FinalsManager):

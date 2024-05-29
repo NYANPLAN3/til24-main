@@ -1,7 +1,8 @@
 from base64 import b64encode
 from typing import Dict, List
-from finals_manager import FinalsManager
+
 import requests
+from finals_manager import FinalsManager
 
 
 class ModelsManager(FinalsManager):

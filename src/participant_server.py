@@ -1,12 +1,11 @@
-import uvloop
 import json
 import os
 from urllib.parse import quote
 
+import uvloop
 import websockets
-
-from finals_manager import FinalsManager
 from auto_manager import AutoManager
+from finals_manager import FinalsManager
 from mock_manager import MockManager
 from models_manager import ModelsManager
 
