@@ -1,4 +1,4 @@
-# py-api-template
+# til24-main
 
 Template for FastAPI-based API server. Features:
 
@@ -10,11 +10,6 @@ Template for FastAPI-based API server. Features:
 
 Oh yeah, this template should work with the fancy "Dev Containers: Clone Repository
 in Container Volume..." feature.
-
-## Usage Instructions
-
-- Replace all instances of `py-api-template`. Optionally, rename `src` to a nicer name.
-  - Tip: Rename the `src` folder first for auto-refactoring.
 
 ## Useful Commands
 

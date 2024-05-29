@@ -7,3 +7,5 @@ poetry config virtualenvs.prompt venv
 poetry install
 
 sudo chown -R vscode:vscode /home/vscode/.cache
+
+/workspaces/til24-main/.devcontainer/hooks/setupGCS.sh

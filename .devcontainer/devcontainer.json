@@ -1,7 +1,7 @@
 // Format details: https://aka.ms/devcontainer.json
 // Custom Dockerfile: https://containers.dev/guide/dockerfile
 {
-  "name": "py-api-template",
+  "name": "til24-main",
 
   // https://github.com/devcontainers/templates/tree/main/src/ubuntu
   "image": "mcr.microsoft.com/devcontainers/base:jammy",
@@ -13,7 +13,9 @@
       "toolsToInstall": "poetry",
       "version": "3.11"
     },
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/joshuanianji/devcontainer-features/gcloud-cli-persistence:1": {},
+    "ghcr.io/dhoeric/features/google-cloud-cli:1": {}
   },
 
   "customizations": {
@@ -40,12 +42,20 @@
       "type": "volume",
       "source": "apt-cache",
       "target": "/var/cache/apt"
-    }
+    },
+    {
+      "type": "volume",
+      "source": "til24-gcsfuse-cache",
+      "target": "/home/vscode/.cache/gcsfuse"
+    },
+    { "type": "bind", "source": "/dev/fuse", "target": "/dev/fuse" }
   ],
 
+  "privileged": true,
   // "runArgs": ["--shm-size=4G"],
   // "shutdownAction": "none",
 
-  // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": ".devcontainer/hooks/postCreate.sh"
+  // See: https://containers.dev/implementors/json_reference/#lifecycle-scripts
+  "postCreateCommand": ".devcontainer/hooks/postCreate.sh",
+  "postStartCommand": ".devcontainer/hooks/postStart.sh"
 }
