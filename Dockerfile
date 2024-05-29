@@ -29,5 +29,5 @@ RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
 COPY --link src ./src
 
 EXPOSE 3000
-# uvicorn --host=0.0.0.0 --port=3000 --factory src:create_app
-CMD ["uvicorn", "--host=0.0.0.0", "--port=3000", "--factory", "src:create_app"]
+# python participant_server.py
+CMD ["python3", "participant_server.py"]
