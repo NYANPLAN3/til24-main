@@ -1,4 +1,4 @@
-import asyncio
+import uvloop
 import json
 import os
 from urllib.parse import quote
@@ -77,4 +77,4 @@ async def server():
 
 
 if __name__ == "__main__":
-    asyncio.run(server())
+    uvloop.run(server())
