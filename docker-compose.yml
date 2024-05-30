@@ -31,6 +31,7 @@ services:
     tty: true
     environment:
       - COMPETITION_SERVER_IP=${COMPETITION_SERVER_IP}
+      - COMPETITION_SERVER_PORT=${COMPETITION_SERVER_PORT}
       - TEAM_NAME=${TEAM_NAME}
       - ROBOT_SN=${ROBOT_SN}
       - ROBOT_IP=${ROBOT_IP}
