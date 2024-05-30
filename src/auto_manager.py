@@ -1,8 +1,11 @@
+import logging
 from random import randint
 from typing import Dict, List
 
 import requests
 from finals_manager import FinalsManager
+
+log = logging.getLogger(__name__)
 
 
 class AutoManager(FinalsManager):
@@ -11,11 +14,11 @@ class AutoManager(FinalsManager):
         self.local_ip = local_ip
 
     def run_asr(self, audio_bytes: bytes) -> str:
-        print("Running ASR")
+        log.info("Running ASR")
         return "asr"
 
     def run_nlp(self, transcript: str) -> Dict[str, str]:
-        print("Running NLP")
+        log.info("Running NLP")
         return {
             "target": "airplane",
             "heading": f"{randint(1,360):03}",
@@ -23,12 +26,12 @@ class AutoManager(FinalsManager):
         }
 
     def run_vlm(self, image_bytes: bytes, caption: str) -> List[int]:
-        print("Running VLM")
+        log.info("Running VLM")
         return [0, 0, 0, 0]
 
     def send_heading(self, heading: str) -> bytes:
         assert heading.isdigit(), "The heading string contains non-digit characters"
-        print(f"Sending cannon heading {heading}")
+        log.info(f"Sending cannon heading {heading}")
         results = requests.post(
             f"http://{self.local_ip}:5003/send_heading", json={"heading": heading}
         )
@@ -36,7 +39,7 @@ class AutoManager(FinalsManager):
         return results.content
 
     def reset_cannon(self):
-        print("Resetting cannon to original position")
+        log.info("Resetting cannon to original position")
         results = requests.post(f"http://{self.local_ip}:5003/reset_cannon")
-        print(results.text)
+        log.info(results.text)
         return results.json()

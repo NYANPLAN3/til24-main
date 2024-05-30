@@ -27,8 +27,7 @@ ipympl = "*"
 ipywidgets = "*"
 
 [tool.poe.tasks]
-dev = { cmd = "python dev.py", use_exec = true }
-prod = "docker run --rm --gpus all -p 3000:3000 nyanplan3-main:latest"
+prod = { cmd = "docker run --rm -it -p 3000:3000 nyanplan3-main:latest", use_exec = true }
 test = "docker compose -f docker-compose.yml up"
 publish = "docker push -a asia-southeast1-docker.pkg.dev/dsta-angelhack/repository-nyanplan3/nyanplan3-main"
 requirements = "poetry export -o requirements.txt --without-hashes"

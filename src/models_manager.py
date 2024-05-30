@@ -1,8 +1,11 @@
+import logging
 from base64 import b64encode
 from typing import Dict, List
 
 import requests
 from finals_manager import FinalsManager
+
+log = logging.getLogger(__name__)
 
 
 class ModelsManager(FinalsManager):
@@ -11,7 +14,7 @@ class ModelsManager(FinalsManager):
         self.local_ip = local_ip
 
     def run_asr(self, audio_bytes: bytes) -> str:
-        print("Running ASR")
+        log.info("Running ASR")
         audio_str = b64encode(audio_bytes).decode("ascii")
         results = requests.post(
             f"http://{self.local_ip}:5001/stt", json={"instances": [{"b64": audio_str}]}
@@ -19,7 +22,7 @@ class ModelsManager(FinalsManager):
         return results.json()["predictions"][0]
 
     def run_nlp(self, transcript: str) -> Dict[str, str]:
-        print("Running NLP")
+        log.info("Running NLP")
         results = requests.post(
             f"http://{self.local_ip}:5002/extract",
             json={"instances": [{"transcript": transcript}]},
@@ -28,7 +31,7 @@ class ModelsManager(FinalsManager):
 
     def send_heading(self, heading: str) -> bytes:
         assert heading.isdigit(), "The heading string contains non-digit characters"
-        print(f"Sending cannon heading {heading}")
+        log.info(f"Sending cannon heading {heading}")
         results = requests.post(
             f"http://{self.local_ip}:5003/send_heading", json={"heading": heading}
         )
@@ -36,12 +39,12 @@ class ModelsManager(FinalsManager):
         return results.content
 
     def reset_cannon(self):
-        print("Resetting cannon to original position")
+        log.info("Resetting cannon to original position")
         results = requests.post(f"http://{self.local_ip}:5003/reset_cannon")
         return results.json()
 
     def run_vlm(self, image_bytes: bytes, caption: str) -> List[int]:
-        print("Running VLM")
+        log.info("Running VLM")
         image_str = b64encode(image_bytes).decode("ascii")
         results = requests.post(
             f"http://{self.local_ip}:5004/identify",

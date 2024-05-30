@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import json
+import logging
 import os
 from urllib.parse import quote
 
@@ -10,6 +11,7 @@ import uvloop
 import websockets
 from auto_manager import AutoManager
 from finals_manager import FinalsManager
+from log import setup_logging
 from mock_manager import MockManager
 from models_manager import ModelsManager
 
@@ -22,10 +24,13 @@ SERVER_PORT = os.getenv("COMPETITION_SERVER_PORT", "8000")
 # manager: FinalsManager = AutoManager(LOCAL_IP)
 manager: FinalsManager = MockManager()
 
+setup_logging()
+log = logging.getLogger(__name__)
+
 
 async def server():
     index = 0
-    print(f"connecting to competition server {SERVER_IP} at port {SERVER_PORT}")
+    log.info(f"connecting to competition server {SERVER_IP} at port {SERVER_PORT}")
     async for websocket in websockets.connect(
         quote(f"ws://{SERVER_IP}:{SERVER_PORT}/ws/{TEAM_NAME}", safe="/:"),
         max_size=2**24,
@@ -38,43 +43,43 @@ async def server():
                     # handle either done or healthcheck
                     data = json.loads(socket_input)
                     if data["status"] == "done":
-                        print("done!")
+                        log.info("done!")
                         break
                     else:
                         await manager.send_result({"health": "ok"})
                         continue
-                print(f"run {index}")
+                log.info(f"run {index}")
                 # ASR
                 transcript = manager.run_asr(socket_input)
-                print(transcript)
+                log.info(transcript)
                 # NLP
                 qa_ans = manager.run_nlp(transcript)
-                print(qa_ans)
+                log.info(qa_ans)
                 query = qa_ans["target"]
                 # autonomy
                 try:
                     image = manager.send_heading(qa_ans["heading"])
                 except AssertionError as e:
                     # if heading is wrong, get image of scene at default heading 000
-                    print(e)
+                    log.error(e, exc_info=e)
                     image = manager.send_heading("000")
                 # VLM
                 vlm_results = manager.run_vlm(image, query)
-                print(vlm_results)
+                log.info(vlm_results)
                 # submit results and reset
                 await manager.send_result(
                     websocket,
                     {"asr": transcript, "nlp": qa_ans, "vlm": vlm_results},
                 )
                 manager.reset_cannon()
-                print(f"done run {index}")
+                log.info(f"done run {index}")
                 index += 1
         except websockets.ConnectionClosed:
             continue
         except KeyboardInterrupt:
             break
         except Exception as e:
-            print(e)
+            log.error(e, exc_info=e)
         else:
             break
 

@@ -1,13 +1,16 @@
 import json
+import logging
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
 
 import websockets
 
+log = logging.getLogger(__name__)
+
 
 class FinalsManager(ABC):
     def __init__(self):
-        print("initializing participant finals server manager")
+        log.info("initializing participant finals server manager")
 
     def send_result(
         self, websocket: websockets.WebSocketClientProtocol, data: Dict[str, Any]

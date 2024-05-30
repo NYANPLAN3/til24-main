@@ -1,7 +1,10 @@
+import logging
 from time import sleep
 from typing import Dict, List
 
 from finals_manager import FinalsManager
+
+log = logging.getLogger(__name__)
 
 
 class MockManager(FinalsManager):
@@ -9,11 +12,11 @@ class MockManager(FinalsManager):
         super().__init__()
 
     def run_asr(self, audio_bytes: bytes) -> str:
-        print("Running ASR")
+        log.info("Running ASR")
         return "asr"
 
     def run_nlp(self, transcript: str) -> Dict[str, str]:
-        print("Running NLP")
+        log.info("Running NLP")
         return {
             "target": "airplane",
             "heading": "180",
@@ -21,14 +24,14 @@ class MockManager(FinalsManager):
         }
 
     def run_vlm(self, image_bytes: bytes, caption: str) -> List[int]:
-        print("Running VLM")
+        log.info("Running VLM")
         return [0, 0, 0, 0]
 
     def send_heading(self, heading: str) -> bytes:
-        print(f"Sending cannon heading {heading}")
+        log.info(f"Sending cannon heading {heading}")
         sleep(1)
         return bytes()
 
     def reset_cannon(self) -> None:
-        print("Resetting cannon to original position")
+        log.info("Resetting cannon to original position")
         return {}
