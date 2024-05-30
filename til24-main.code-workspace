@@ -1,0 +1,20 @@
+{
+  "folders": [
+	{
+		"path": "."
+	},
+	{
+		"path": "til24-vlm"
+	},
+	{
+		"path": "til24-nlp"
+	},
+	{
+		"path": "til24-asr"
+	},
+	{
+		"path": "til24-autonomy"
+	}
+],
+  "settings": {}
+}
