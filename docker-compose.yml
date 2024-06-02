@@ -77,6 +77,9 @@ services:
   til-nlp:
     build: til24-nlp/
     image: nyanplan3-nlp:test
+    environment:
+      - ENABLE_CHEESE_SKIP_HEADING=0
+      - ENABLE_CHEESE_FILTER_TRANSCRIPT=1
     container_name: til-nlp
     stdin_open: true
     tty: true
@@ -100,6 +103,10 @@ services:
   til-vlm:
     build: til24-vlm/
     image: nyanplan3-vlm:test
+    environment:
+      - DET_CONF=0.1
+      - DET_MAX=20
+      - DET_PAD=0.0
     container_name: til-vlm
     stdin_open: true
     tty: true
