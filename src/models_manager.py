@@ -2,7 +2,7 @@ import logging
 from base64 import b64encode
 from typing import Dict, List
 
-from .finals_manager import FinalsManager
+from src.finals_manager import FinalsManager
 
 log = logging.getLogger(__name__)
 

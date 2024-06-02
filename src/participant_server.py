@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 
-from .log import setup_logging
+from src.log import setup_logging
 
 if True:
     setup_logging()
@@ -14,10 +14,10 @@ from urllib.parse import quote
 import uvloop
 import websockets
 
-from .auto_manager import AutoManager
-from .finals_manager import FinalsManager
-from .mock_manager import MockManager
-from .models_manager import ModelsManager
+from src.auto_manager import AutoManager
+from src.finals_manager import FinalsManager
+from src.mock_manager import MockManager
+from src.models_manager import ModelsManager
 
 TEAM_NAME = os.getenv("TEAM_NAME", "Team Name")
 LOCAL_IP = os.getenv("LOCAL_IP", "0.0.0.0")

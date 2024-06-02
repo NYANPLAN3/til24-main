@@ -29,5 +29,6 @@ RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
 COPY --link src ./src
 
 EXPOSE 3000
+ENV PYTHONPATH="/app:${PYTHONPATH}"
 # python participant_server.py
 CMD ["python3", "src/participant_server.py"]

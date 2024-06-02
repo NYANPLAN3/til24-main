@@ -2,7 +2,7 @@ import logging
 from random import randint
 from typing import Dict, List
 
-from .finals_manager import FinalsManager
+from src.finals_manager import FinalsManager
 
 log = logging.getLogger(__name__)
 

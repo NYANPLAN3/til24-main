@@ -2,7 +2,7 @@ import logging
 from asyncio import sleep
 from typing import Dict, List
 
-from .finals_manager import FinalsManager
+from src.finals_manager import FinalsManager
 
 log = logging.getLogger(__name__)
 
@@ -12,6 +12,7 @@ class MockManager(FinalsManager):
         super().__init__()
 
     async def run_asr(self, audio_bytes: bytes) -> str:
+        print(__name__)
         log.info("Running ASR")
         return "asr"
 
