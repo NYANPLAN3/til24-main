@@ -37,6 +37,7 @@ services:
       - ROBOT_IP=${ROBOT_IP}
       - LOCAL_IP=${LOCAL_IP}
       - USE_ROBOT=${USE_ROBOT}
+      - YAW_SPEED=${YAW_SPEED}
     container_name: til-autonomy
     ports:
       - 5003:5003

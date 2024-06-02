@@ -13,7 +13,7 @@ class ModelsManager(FinalsManager):
         self.local_ip = local_ip
 
     async def run_asr(self, audio_bytes: bytes) -> str:
-        log.info("Running ASR")
+        log.info("Start ASR")
         audio_str = b64encode(audio_bytes).decode("ascii")
         results = await self.async_post(
             f"http://{self.local_ip}:5001/stt", json={"instances": [{"b64": audio_str}]}
@@ -21,7 +21,7 @@ class ModelsManager(FinalsManager):
         return results.json()["predictions"][0]
 
     async def run_nlp(self, transcript: str) -> Dict[str, str]:
-        log.info("Running NLP")
+        log.info("Start NLP")
         results = await self.async_post(
             f"http://{self.local_ip}:5002/extract",
             json={"instances": [{"transcript": transcript}]},
@@ -29,24 +29,23 @@ class ModelsManager(FinalsManager):
         return results.json()["predictions"][0]
 
     async def send_heading(self, heading: str) -> bytes:
-        assert heading.isdigit(), "The heading string contains non-digit characters"
-        log.info(f"Sending cannon heading {heading}")
+        log.info(f"Start Autonomy")
         results = await self.async_post(
             f"http://{self.local_ip}:5003/send_heading", json={"heading": heading}
         )
         # snapshot of image
         return results.content
 
-    async def reset_cannon(self):
-        log.info("Resetting cannon to original position")
-        results = await self.async_post(f"http://{self.local_ip}:5003/reset_cannon")
-        return results.json()
-
     async def run_vlm(self, image_bytes: bytes, caption: str) -> List[int]:
-        log.info("Running VLM")
+        log.info("Start VLM")
         image_str = b64encode(image_bytes).decode("ascii")
         results = await self.async_post(
             f"http://{self.local_ip}:5004/identify",
             json={"instances": [{"b64": image_str, "caption": caption}]},
         )
         return results.json()["predictions"][0]
+
+    async def reset_cannon(self):
+        log.info("Reset Cannon")
+        results = await self.async_post(f"http://{self.local_ip}:5003/reset_cannon")
+        return results.json()

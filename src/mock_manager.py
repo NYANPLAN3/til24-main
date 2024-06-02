@@ -30,7 +30,7 @@ class MockManager(FinalsManager):
 
     async def send_heading(self, heading: str) -> bytes:
         log.info(f"Sending cannon heading {heading}")
-        await sleep(1)
+        await sleep(0)
         return bytes()
 
     async def reset_cannon(self) -> None:

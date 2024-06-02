@@ -52,8 +52,8 @@
   ],
 
   "privileged": true,
-  // "runArgs": ["--shm-size=4G"],
-  // "shutdownAction": "none",
+  "runArgs": ["--shm-size=32G"],
+  "shutdownAction": "none",
 
   // See: https://containers.dev/implementors/json_reference/#lifecycle-scripts
   "postCreateCommand": ".devcontainer/hooks/postCreate.sh",

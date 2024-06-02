@@ -24,17 +24,16 @@ LOCAL_IP = os.getenv("LOCAL_IP", "0.0.0.0")
 SERVER_IP = os.getenv("COMPETITION_SERVER_IP", "host.docker.internal")
 SERVER_PORT = os.getenv("COMPETITION_SERVER_PORT", "8000")
 
-# manager: FinalsManager = ModelsManager(LOCAL_IP)
+manager: FinalsManager = ModelsManager(LOCAL_IP)
 # manager: FinalsManager = AutoManager(LOCAL_IP)
-manager: FinalsManager = MockManager()
+# manager: FinalsManager = MockManager()
 
 log = logging.getLogger(__name__)
 
 
 async def server():
     index = 0
-    log.info(
-        f"connecting to competition server {SERVER_IP} at port {SERVER_PORT}")
+    log.info(f"[CONNECTING] {SERVER_IP}:{SERVER_PORT}")
     async for websocket in websockets.connect(
         quote(f"ws://{SERVER_IP}:{SERVER_PORT}/ws/{TEAM_NAME}", safe="/:"),
         max_size=2**24,
@@ -42,43 +41,50 @@ async def server():
 
         try:
             while True:
+                log.info(f"[RUN {index}]")
                 # should be receiving either audio bytes for asr, or done/healthcheck json
                 socket_input = await websocket.recv()
-                if type(socket_input) is str:
+                # If its a str, its json. If its bytes, continue to ASR.
+                if type(socket_input) == str:
                     # handle either done or healthcheck
-                    data = json.loads(socket_input)
-                    if data["status"] == "done":
-                        log.info("done!")
-                        break
-                    else:
-                        await manager.send_result({"health": "ok"})
+                    try:
+                        data = json.loads(socket_input)
+                        if data["status"] == "done":
+                            log.info("[DONE]")
+                            break
+                        else:
+                            await manager.send_result({"health": "ok"})
+                            continue
+                    except json.JSONDecodeError:
+                        log.error(f"Invalid JSON:\n{socket_input}")
                         continue
-                log.info(f"run {index}")
+
                 # ASR
                 transcript = await manager.run_asr(socket_input)
-                log.info(transcript)
+                log.info(f"ASR:\n{transcript}")
+
                 # NLP
                 qa_ans = await manager.run_nlp(transcript)
-                log.info(qa_ans)
-                query = qa_ans["target"]
-                # autonomy
-                try:
-                    image = await manager.send_heading(qa_ans["heading"])
-                except AssertionError as e:
-                    # if heading is wrong, get image of scene at default heading 000
-                    log.error(e, exc_info=e)
-                    image = await manager.send_heading("000")
+                log.info(f"NLP:\n{qa_ans}")
+                target, heading = qa_ans["target"], qa_ans["heading"]
+
+                # Autonomy
+                image = await manager.send_heading(heading)
+                log.info(f"Autonomy:\nDone")
+
                 # VLM
-                vlm_results = await manager.run_vlm(image, query)
-                log.info(vlm_results)
-                # submit results and reset
+                vlm_results = await manager.run_vlm(image, target)
+                log.info(f"VLM:\n{vlm_results}")
+
+                # Submit results and reset
                 await manager.send_result(
                     websocket,
                     {"asr": transcript, "nlp": qa_ans, "vlm": vlm_results},
                 )
                 await manager.reset_cannon()
-                log.info(f"done run {index}")
+                log.info(f"[END {index}]")
                 index += 1
+
         except websockets.ConnectionClosed:
             continue
         except KeyboardInterrupt:
