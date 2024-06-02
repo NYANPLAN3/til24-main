@@ -23,6 +23,7 @@ services:
       til-vlm:
         condition: service_healthy
     stop_grace_period: 1s
+    stop_signal: SIGKILL
   til-autonomy:
     build: til24-autonomy/
     image: nyanplan3-autonomy:test
@@ -45,6 +46,7 @@ services:
       memlock: -1
     shm_size: 32gb
     stop_grace_period: 1s
+    stop_signal: SIGKILL
     healthcheck:
       test: "curl -f http://localhost:5003/health || exit 1"
       interval: 5s
@@ -68,6 +70,7 @@ services:
           devices:
             - capabilities: [gpu]
     stop_grace_period: 1s
+    stop_signal: SIGKILL
     healthcheck:
       test: "curl -f http://localhost:5001/health || exit 1"
       interval: 5s
@@ -94,6 +97,7 @@ services:
           devices:
             - capabilities: [gpu]
     stop_grace_period: 1s
+    stop_signal: SIGKILL
     healthcheck:
       test: "curl -f http://localhost:5002/health || exit 1"
       interval: 5s
@@ -121,6 +125,7 @@ services:
           devices:
             - capabilities: [gpu]
     stop_grace_period: 1s
+    stop_signal: SIGKILL
     healthcheck:
       test: "curl -f http://localhost:5004/health || exit 1"
       interval: 5s
