@@ -11,6 +11,9 @@ class MockManager(FinalsManager):
     def __init__(self):
         super().__init__()
 
+    async def wait_for_services(self):
+        await sleep(1)
+
     async def run_asr(self, audio_bytes: bytes) -> str:
         print(__name__)
         log.info("Running ASR")

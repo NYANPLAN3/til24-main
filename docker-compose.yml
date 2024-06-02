@@ -8,27 +8,23 @@ services:
       - TEAM_NAME=${TEAM_NAME}
       - LOCAL_IP=${LOCAL_IP}
     container_name: til-main
+    stdin_open: true
+    tty: true
     ulimits:
       memlock: -1
     shm_size: 32gb
     depends_on:
       til-asr:
         condition: service_healthy
-        restart: true
       til-nlp:
         condition: service_healthy
-        restart: true
       til-autonomy:
         condition: service_healthy
-        restart: true
       til-vlm:
         condition: service_healthy
-        restart: true
   til-autonomy:
     build: til24-autonomy/
     image: nyanplan3-autonomy:test
-    stdin_open: true
-    tty: true
     environment:
       - COMPETITION_SERVER_IP=${COMPETITION_SERVER_IP}
       - COMPETITION_SERVER_PORT=${COMPETITION_SERVER_PORT}
@@ -39,6 +35,8 @@ services:
       - USE_ROBOT=${USE_ROBOT}
       - YAW_SPEED=${YAW_SPEED}
     container_name: til-autonomy
+    stdin_open: true
+    tty: true
     ports:
       - 5003:5003
       - 10100-10500:10100-10500/udp
@@ -46,15 +44,17 @@ services:
       memlock: -1
     shm_size: 32gb
     healthcheck:
-      test: curl -f http://localhost:5003/health || exit 1
+      test: "curl -f http://localhost:5003/health || exit 1"
       interval: 5s
       timeout: 30s
-      retries: 5
+      retries: 20
       start_period: 3s
   til-asr:
     build: til24-asr/
     image: nyanplan3-asr:test
     container_name: til-asr
+    stdin_open: true
+    tty: true
     ports:
       - 5001:5001
     ulimits:
@@ -64,17 +64,19 @@ services:
       resources:
         reservations:
           devices:
-            - capabilities: [nvidia-compute]
+            - capabilities: [gpu]
     healthcheck:
-      test: curl -f http://localhost:5001/health || exit 1
+      test: "curl -f http://localhost:5001/health || exit 1"
       interval: 5s
       timeout: 30s
-      retries: 5
+      retries: 20
       start_period: 3s
   til-nlp:
     build: til24-nlp/
     image: nyanplan3-nlp:test
     container_name: til-nlp
+    stdin_open: true
+    tty: true
     ports:
       - 5002:5002
     ulimits:
@@ -84,17 +86,19 @@ services:
       resources:
         reservations:
           devices:
-            - capabilities: [nvidia-compute]
+            - capabilities: [gpu]
     healthcheck:
-      test: curl -f http://localhost:5002/health || exit 1
+      test: "curl -f http://localhost:5002/health || exit 1"
       interval: 5s
       timeout: 30s
-      retries: 5
+      retries: 20
       start_period: 3s
   til-vlm:
     build: til24-vlm/
     image: nyanplan3-vlm:test
     container_name: til-vlm
+    stdin_open: true
+    tty: true
     ports:
       - 5004:5004
     ulimits:
@@ -104,10 +108,10 @@ services:
       resources:
         reservations:
           devices:
-            - capabilities: [nvidia-compute]
+            - capabilities: [gpu]
     healthcheck:
-      test: curl -f http://localhost:5004/health || exit 1
+      test: "curl -f http://localhost:5004/health || exit 1"
       interval: 5s
       timeout: 30s
-      retries: 5
+      retries: 20
       start_period: 3s

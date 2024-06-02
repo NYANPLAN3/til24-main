@@ -1,4 +1,5 @@
 import logging
+from asyncio import sleep
 from random import randint
 from typing import Dict, List
 
@@ -11,6 +12,17 @@ class AutoManager(FinalsManager):
     def __init__(self, local_ip: str):
         super().__init__()
         self.local_ip = local_ip
+
+    async def wait_for_services(self):
+        while True:
+            try:
+                await sleep(2)
+                await self.client.get(f"http://{self.local_ip}:5003/health", timeout=None)
+                log.info("Autonomy Healthy")
+            except Exception as e:
+                log.error(e)
+                continue
+            break
 
     async def run_asr(self, audio_bytes: bytes) -> str:
         log.info("Running ASR")

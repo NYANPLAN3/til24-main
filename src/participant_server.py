@@ -9,6 +9,7 @@ if True:
 import json
 import logging
 import os
+from asyncio import sleep
 from urllib.parse import quote
 
 import uvloop
@@ -33,6 +34,9 @@ log = logging.getLogger(__name__)
 
 async def server():
     index = 0
+    # log.info("WAITING FOR SERVICES")
+    # await manager.wait_for_services()
+
     log.info(f"[CONNECTING] {SERVER_IP}:{SERVER_PORT}")
     async for websocket in websockets.connect(
         quote(f"ws://{SERVER_IP}:{SERVER_PORT}/ws/{TEAM_NAME}", safe="/:"),

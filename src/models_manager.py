@@ -1,4 +1,5 @@
 import logging
+from asyncio import sleep
 from base64 import b64encode
 from typing import Dict, List
 
@@ -11,6 +12,21 @@ class ModelsManager(FinalsManager):
     def __init__(self, local_ip: str):
         super().__init__()
         self.local_ip = local_ip
+
+    async def wait_for_services(self):
+        # fmt: off
+        while True:
+            try:
+                await sleep(2)
+                await self.client.get(f"http://{self.local_ip}:5001/health", timeout=None)
+                await self.client.get(f"http://{self.local_ip}:5002/health", timeout=None)
+                await self.client.get(f"http://{self.local_ip}:5003/health", timeout=None)
+                await self.client.get(f"http://{self.local_ip}:5004/health", timeout=None)
+            except Exception as e:
+                log.error(e)
+                continue
+            break
+        # fmt: on
 
     async def run_asr(self, audio_bytes: bytes) -> str:
         log.info("Start ASR")

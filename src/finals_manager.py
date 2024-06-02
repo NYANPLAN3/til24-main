@@ -18,12 +18,16 @@ class FinalsManager(ABC):
         await self.client.aclose()
 
     async def async_post(self, endpoint: str, json: Optional[Dict] = None):
-        return await self.client.post(endpoint, json=json)
+        return await self.client.post(endpoint, json=json, timeout=None)
 
     async def send_result(
         self, websocket: websockets.WebSocketClientProtocol, data: Dict[str, Any]
     ):
         return await websocket.send(json.dumps(data))
+
+    @abstractmethod
+    async def wait_for_services(self):
+        raise NotImplemented
 
     @abstractmethod
     async def run_asr(self, audio_bytes: bytes) -> str:
