@@ -22,6 +22,7 @@ services:
         condition: service_healthy
       til-vlm:
         condition: service_healthy
+    stop_grace_period: 1s
   til-autonomy:
     build: til24-autonomy/
     image: nyanplan3-autonomy:test
@@ -43,6 +44,7 @@ services:
     ulimits:
       memlock: -1
     shm_size: 32gb
+    stop_grace_period: 1s
     healthcheck:
       test: "curl -f http://localhost:5003/health || exit 1"
       interval: 5s
@@ -65,6 +67,7 @@ services:
         reservations:
           devices:
             - capabilities: [gpu]
+    stop_grace_period: 1s
     healthcheck:
       test: "curl -f http://localhost:5001/health || exit 1"
       interval: 5s
@@ -87,6 +90,7 @@ services:
         reservations:
           devices:
             - capabilities: [gpu]
+    stop_grace_period: 1s
     healthcheck:
       test: "curl -f http://localhost:5002/health || exit 1"
       interval: 5s
@@ -109,6 +113,7 @@ services:
         reservations:
           devices:
             - capabilities: [gpu]
+    stop_grace_period: 1s
     healthcheck:
       test: "curl -f http://localhost:5004/health || exit 1"
       interval: 5s
