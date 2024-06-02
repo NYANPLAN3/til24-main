@@ -2,8 +2,7 @@ import logging
 from random import randint
 from typing import Dict, List
 
-import requests
-from finals_manager import FinalsManager
+from .finals_manager import FinalsManager
 
 log = logging.getLogger(__name__)
 
@@ -13,11 +12,11 @@ class AutoManager(FinalsManager):
         super().__init__()
         self.local_ip = local_ip
 
-    def run_asr(self, audio_bytes: bytes) -> str:
+    async def run_asr(self, audio_bytes: bytes) -> str:
         log.info("Running ASR")
         return "asr"
 
-    def run_nlp(self, transcript: str) -> Dict[str, str]:
+    async def run_nlp(self, transcript: str) -> Dict[str, str]:
         log.info("Running NLP")
         return {
             "target": "airplane",
@@ -25,21 +24,21 @@ class AutoManager(FinalsManager):
             "tool": "surface-to-air missiles",
         }
 
-    def run_vlm(self, image_bytes: bytes, caption: str) -> List[int]:
+    async def run_vlm(self, image_bytes: bytes, caption: str) -> List[int]:
         log.info("Running VLM")
         return [0, 0, 0, 0]
 
-    def send_heading(self, heading: str) -> bytes:
+    async def send_heading(self, heading: str) -> bytes:
         assert heading.isdigit(), "The heading string contains non-digit characters"
         log.info(f"Sending cannon heading {heading}")
-        results = requests.post(
+        results = await self.async_post(
             f"http://{self.local_ip}:5003/send_heading", json={"heading": heading}
         )
         # snapshot of image
         return results.content
 
-    def reset_cannon(self):
+    async def reset_cannon(self):
         log.info("Resetting cannon to original position")
-        results = requests.post(f"http://{self.local_ip}:5003/reset_cannon")
+        results = await self.async_post(f"http://{self.local_ip}:5003/reset_cannon")
         log.info(results.text)
         return results.json()
