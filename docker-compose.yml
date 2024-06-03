@@ -39,9 +39,10 @@ services:
     container_name: til-autonomy
     stdin_open: true
     tty: true
-    ports:
-      - 5003:5003
-      - 10100-10500:10100-10500/udp
+    network_mode: host
+    # ports:
+    #   - 5003:5003
+    #   - 10100-10500:10100-10500/udp
     ulimits:
       memlock: -1
     shm_size: 32gb
