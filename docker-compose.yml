@@ -16,12 +16,16 @@ services:
     depends_on:
       til-asr:
         condition: service_healthy
+        restart: true
       til-nlp:
         condition: service_healthy
+        restart: true
       til-autonomy:
         condition: service_healthy
+        restart: true
       til-vlm:
         condition: service_healthy
+        restart: true
     stop_grace_period: 1s
     stop_signal: SIGKILL
   til-autonomy:
@@ -36,6 +40,7 @@ services:
       - LOCAL_IP=${LOCAL_IP}
       - USE_ROBOT=${USE_ROBOT}
       - YAW_SPEED=${YAW_SPEED}
+      - YAW_TOL=${YAW_TOL}
     container_name: til-autonomy
     stdin_open: true
     tty: true
