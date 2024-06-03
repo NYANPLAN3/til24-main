@@ -65,20 +65,20 @@ async def server():
 
                 # ASR
                 transcript = await manager.run_asr(socket_input)
-                log.info(f"ASR:\n{transcript}")
+                log.info(f"ASR: {transcript}")
 
                 # NLP
                 qa_ans = await manager.run_nlp(transcript)
-                log.info(f"NLP:\n{qa_ans}")
+                log.info(f"NLP: {qa_ans}")
                 target, heading = qa_ans["target"], qa_ans["heading"]
 
                 # Autonomy
                 image = await manager.send_heading(heading)
-                log.info(f"Autonomy:\nDone")
+                log.info(f"Autonomy Done")
 
                 # VLM
                 vlm_results = await manager.run_vlm(image, target)
-                log.info(f"VLM:\n{vlm_results}")
+                log.info(f"VLM: {vlm_results}")
 
                 # Submit results and reset
                 await manager.send_result(
